@@ -71,7 +71,16 @@ puts sum
 # 4回目: result=6、n=4で、6+4=10  最後の要素に達したのでこれがinjectメソッドの戻り値になる
 
 # 文字列に対してのinjectメソッド
-weekday = ['Mon','Tue','Wed','Thu','Fri','Sat']
-string = ''
-string = weekday.inject('Sun') {|result, s| result + s }
+string = ['Mon','Tue','Wed','Thu','Fri','Sat'].inject('Sun') {|result, s| result + s }
 puts string
+
+# 上級編ブロックを使うメソッドを完結に書く
+# このコードは
+['ruby', 'java','perl'].map { |s| s.upcase }
+# こう書き換えられる
+['ruby','java','perl'].map(&:upcase)
+
+# このコードは
+[1,2,3,4,5,6].select { |n| n.odd? }
+# こう書き換えられる
+[1,2,3,4,5,6].select(&:odd?)
