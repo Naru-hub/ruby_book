@@ -54,3 +54,24 @@ numbers = [1,2,3,4,5,6]
 # 3の倍数を除外する(3の倍数以外を集める)
 non_multiples_of_three = numbers.reject { |n| n % 3 == 0 }
 puts non_multiples_of_three
+
+# findメソッド  ブロックの戻り値が真になった最初の要素を返す
+numbers = [1,2,3,4,5,6]
+even_number = numbers.find {|n| n.even?}
+puts even_number
+
+# injectメソッド たたみ込む演算を行う
+numbers = [1,2,3,4]
+sum = 0
+sum = numbers.inject(0) {|result, n| result + n }
+puts sum
+# 1回目: result=0、n=1で、0+1=1   これが次のresultに入る
+# 2回目: result=1、n=2で、1+2=3   この結果が次のresultに入る
+# 3回目: result=3、n=3で、3+3=6   この結果が次のresultに入る
+# 4回目: result=6、n=4で、6+4=10  最後の要素に達したのでこれがinjectメソッドの戻り値になる
+
+# 文字列に対してのinjectメソッド
+weekday = ['Mon','Tue','Wed','Thu','Fri','Sat']
+string = ''
+string = weekday.inject('Sun') {|result, s| result + s }
+puts string
