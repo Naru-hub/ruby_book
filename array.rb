@@ -222,3 +222,7 @@ fruits = ['apple','orange','melon']
 # mapとして処理しつつ、添字も受け取る
 fruits.map.with_index{|fruit,i| "#{i}: #{fruit}"}
 
+# delete_ifメソッドとwith_index
+fruits = ['apple','orange','melon']
+# 名前に"a"を含み、なおかつ添字が奇数である要素を削除する
+puts fruits.delete_if.with_index{|fruit,i| fruit.include?('a') && i.odd? }  #["apple","melon"]
