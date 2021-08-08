@@ -176,3 +176,49 @@ a     #[0,0,0,0,0]
 # 要素数が10で、1,2,3,1,2,3...と繰り返す配列を作る
 a = Array.new(10){|n| n % 3 + 1}
 a     #[1,2,3,1,2,3,1,2,3,1]
+
+# 引数ではなくブロックで初期値を渡す
+a = Array.new(5){'default'}
+a         #["default","default","default","default","default"]
+# 1番目の要素を取得する
+str = a[0]
+str  #"default"
+# 1番目の要素を大文字に変換する（破壊的変更）
+str.upcase!
+str  #"DEFAULT"
+# 1番目の要素だけが大文字になり、ほかは変わらない
+a    #["DEFAULT","default","default","default","default"]
+
+
+# 文字列は配列とは無関係なオブジェクトだが、[]や<<を使って配列と同じような操作をすることができる
+a = 'abcde'
+# 3文字目を取得する
+a[2]
+# 2文字目から3文字分を取得する
+a[1,3]  #"bcd"
+# 最後の1文字を取得する
+a[-1]   #"e"
+
+# 1文字目を"X"に置き換える
+a[0] = 'X'
+a      #"Xbcde"
+# 2文字目から3文字分を"Y"に置き換える
+a[1,3] = 'Y'
+a      #"XYe"
+# 末尾に"PQR"を連結する
+a << 'PQR'
+a      #"XYePQR"
+
+# each_with_indexメソッド 添字付きの繰り返し処理
+fruits = ['apple','orange','melon']
+# ブロックの引数のiには0,1,2...と要素の添字が入る
+fruits.each_with_index{|fruit,i| puts "#{i}: #{fruit}"}
+#0:apple
+#1:orange
+#2:melon
+
+# mapメソッド+with_indexメソッド
+fruits = ['apple','orange','melon']
+# mapとして処理しつつ、添字も受け取る
+fruits.map.with_index{|fruit,i| "#{i}: #{fruit}"}
+
