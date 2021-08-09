@@ -101,5 +101,181 @@ a = []
 10.step(1,-2){|n| a << n }
 a         #[10,8,6,4,2]
 
+# while分繰り返し処理用の構文(指定した条件が真である間、処理を繰り返す)
+# 配列の要素数が5つになるまで値を追加するwhile文
+a = []
+while a.size < 5
+  a << 1
+end
+a       #[1,1,1,1,1]
+# 条件式の後ろにdoを入れると1行で書くことも可能
+a = []
+while a.size < 5 do a << 1 end
+a
+# 更にスッキリ1行でかける
+a = []
+a << 1 while a.size < 5
+a
+
+# begin...endで囲みwhile どんな条件でも最低１回は実行したい場合
+a = []
+while false
+  # このコードは常に条件が偽になるので実行されない
+  a << 1
+end
+a        #[]
+# begin...endで囲むとどんな条件でも最低１回は実行される
+begin
+  a << 1
+end while false
+a        #[1]
+
+# whileの反対で、条件が偽である間、処理を繰り返すuntil文もある
+# 配列の要素数が3以下になるまで配列の要素を後ろから削除していく
+a = [10,20,30,40,50]
+until a.size <= 3
+  a.delete_at(-1)
+end
+a
+
+# for文
+numbers = [1,2,3,4]
+sum = 0
+for n in numbers
+  sum += n
+end
+puts sum
+# doを入れて1行で書くことも可
+sum = 0
+for n in numbers do sum += n end
+sum
+# for文は配列の要素を受け取る変数やfor文の中で作成したローカル変数がfor文の外でも使える
+numbers = [1,2,3,4]
+sum = 0
+numbers.each do |n|
+  sum_value = n.even? ? n * 10:n
+  sum += sum_value
+end
+# ブロック引数やブロック内で作成した変数はブロックの外では参照できない
+n
+# sum_value  NameErrorになる
 
 
+sum = 0
+for n in numbers 
+  sum_value = n.even? ? n * 10:n
+  sum += sum_value
+end
+# for文の中で作成された変数はfor文の外でも参照できる
+n           #4
+sum_value   #40
+
+# loopメソッド
+# 配列に格納した5つの数値の中からランダムに数値を選び、5がでたタイミングで脱出する無限ループ
+numbers = [1,2,3,4,5]
+loop do
+  # sampleメソッドでランダムに要素を1つ取得する
+  n = numbers.sample
+  n
+  break if n == 5
+end
+# while文でループ
+while true
+  n = numbers.sample
+  n
+  break if n == 5
+end
+
+# breakを使うと繰り返し処理を脱出することができる
+# shuffleメソッドで配列の要素をランダムに並び替える
+numbers = [1,2,3,4,5].shuffle
+numbers.each do |n|
+  n
+# 5が出たら繰り返しを脱出
+break if n == 5
+end
+# whileで書き直す
+numbers = [1,2,3,4,5].shuffle
+i = 0
+while i < numbers.size
+  n = numbers[i]
+  puts n
+  break if n == 5
+  i += 1
+end
+
+# breakに引数を渡すとwhile文やfor文の戻り値になる。引数を渡さなければ戻り値はnil
+ret = 
+while true
+  break
+end
+ret   #nil
+
+ret = 
+while true
+  break 123
+end
+ret   #123
+
+# 繰り返し処理が入れ子になっている場合は一番内側の繰り返し処理を脱出する
+fruits = ['apple','melon','orange']
+numbers = [1,2,3]
+fruits.each do |fruit|
+  # 配列の数字をランダムに入れ替え、3が出たらbreakする
+  numbers.shuffle.each do |n|
+    "#{fruit},#{n}"
+    # numberのループは脱出するがfruitsのループは継続する
+    break if n == 3
+  end
+end
+
+# throwとcatch "orange"と3の組み合わせが出たらすべての繰り返し処理を脱出する
+fruits = ['apple','melon','orange']
+numbers = [1,2,3]
+catch :done do
+  fruits.shuffle.each do |fruit|
+    numbers.shuffle.each do |n|
+      puts "#{fruit}, #{n}"
+      if fruit == 'orange' && n == 3
+        # すべての繰り返し処理を脱出する
+        throw :done
+      end
+    end
+  end
+end
+
+# next 繰り返し処理を途中で中断し、次の繰り返し処理にすすめる
+# 偶数であれば処理を中断して次の繰り返し処理に進む
+numbers = [1,2,3,4,5]
+numbers.each do |n|
+  # 偶然であれば中断して次の繰り返し処理に進む
+  next if n.even?
+  puts n
+end
+
+fruits = ['apple','melon','orange']
+numbers = [1,2,3,4]
+fruits.each do |fruit|
+  numbers.each do |n|
+    # 繰り返し処理が入れ子になっている場合は、一番内側のループだけが中断される
+    next if n.even?
+    puts "#{fruit}, #{n}"
+  end
+end    
+
+# redo 繰り返し処理をやり直す
+foods = ['ピーマン','トマト','セロリ']
+count = 0
+foods.each do |food|
+  print "#{food}は好きですか？ =>"
+  # わざと「いいえ」しか答えないようにする
+  answer = 'いいえ'
+  puts answer
+
+  count += 1
+  # やりなおしは2回までにする
+  redo if answer != 'はい'&& count < 2
+  
+  # カウントをリセット
+  count = 0
+end
