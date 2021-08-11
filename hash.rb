@@ -61,3 +61,44 @@ currencies = {'japan' => 'yen','us' => 'dollar','india' => 'rupee'}
 currencies.delete('italy')  #nil
 puts currencies.delete('italy') {|key| "Not found: #{key}"} #=> "Not found: italy"
 
+# ハッシュのキーにシンボルを使う
+currencies = {:japan => 'yen', :us => 'dollar', :india => 'rupee'}
+# シンボルを使って値を取り出す
+puts currencies[:us]
+# 新しいキーと値の組み合わせを追加する
+currencies[:italy] = 'euro'
+
+# => ではなく、"シンボル:値"の記法でハッシュを作成する
+currencies = {japan: 'yen', us: 'dollar', india: 'rupee'}
+# 値を取り出すときは同じ
+puts currencies[:us]
+# キーも値もシンボルの場合
+{japan: :yen, us: :dollar, india: :rupee}
+# 上のハッシュと下のハッシュは全く同じ
+{:japan => :yen, :us =>:dollar, :india => :rupee }
+
+# キーや値に異なるデータ型を混在させる
+# 文字列のキーとシンボルのキーを混在させる
+hash = {'abc' => 123, def: 456}
+# 値を取得する場合はデータ型を合わせてキーを指定する
+puts hash['abc']  #123
+puts hash[:def]   #456
+# データ型が異なると値は取得できない
+puts hash[:abc]   #nil
+
+# ハッシュに格納する値に関して異なるデータ型が混在するケース
+person = {
+  # 値が文字列
+  name: 'Alice',
+  # 値が数値
+  age: 20,
+  # 値が配列
+  friends: ['Bob','Carol'],
+  # 値がハッシュ
+  phones: {home: '1234-0000', mobile: '5678-0000'}
+}
+
+puts person[:age]
+puts person[:friends]
+puts person[:phones][:mobile]
+
