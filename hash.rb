@@ -60,3 +60,4 @@ currencies = {'japan' => 'yen','us' => 'dollar','india' => 'rupee'}
 # 削除しようとしたキーが見つからないときはnilが返る
 currencies.delete('italy')  #nil
 puts currencies.delete('italy') {|key| "Not found: #{key}"} #=> "Not found: italy"
+
