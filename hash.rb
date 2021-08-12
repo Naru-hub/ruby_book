@@ -130,6 +130,19 @@ puts currencies.to_a       #[[:japan, "yen"],[:us, "dollar"],[:india, "rupee"]]
 array = [[:japan, "yen"],[:us,"dollar"],[:india,"rupee"]]
 puts array.to_h            #{:japan=>"yen", :us=>"dollar", :india=>"rupee"}
 
+# to_hメソッドがなかったときはキーと値のペアの配列をHash[]に対して渡すことで配列をハッシュに変換していた
+# キーと値のペアの配列をHASH[]に渡す
+array = [[:japan, "yen",:us,"dollar",:india,"rupee"]]
+Hash[*array]    #{;japan=>"yen",:us=>"dollar",:indeia=>"rupee"}
+# キーと値が交互に並ぶフラットな配列をsplat展開してもいい
+array = [[:japan,"yen",:us,"dollar",:india,"rupee"]]
+Hash[*array]    #{;japan=>"yen",:us=>"dollar",:indeia=>"rupee"}
+
+# nil以外の値を返したいときは、Hash.newでハッシュを作成し、引数に初期値となる値を指定する
+# キーがなければ'hello'を返す
+h = Hash.new('hello')
+puts h[:foo]
+
 
 
 
