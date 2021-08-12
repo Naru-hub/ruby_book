@@ -38,3 +38,44 @@ h[:bar]    #"hello"
 
 # ハッシュにキーと値が追加されている
 h      #{:foo=>"hello",:bar=>"hello"}
+
+
+# %記法でシンボルやシンボルの配列を作成する
+# !を区切り文字に使う
+%s!ruby is fun!      #:"ruby is fun"
+# ()を区切り文字に使う
+%s(ruby is fun)      #:"ruby is fun"
+
+# シンボルの配列を作成する場合は%iを使うことができます。この場合空白文字が要素の区切りになります
+%i(apple orange melon)   #[:apple, :orange, :melon]
+
+
+# to_symメソッド(エイリアスメソッドはintern)を使うと文字列をシンボルに変換することができる
+string = 'apple'
+symbol = :apple
+
+string.to_sym      #apple
+string.to_sym == symbol    #true
+
+# 反対にシンボルを文字列に変換する場合はto_sメソッド(エイリアスメソッドはid2name)を使う
+string = 'apple'
+symbol = :apple
+
+symbol.to_s              #apple
+string == symbol.to_s    #true
+string + symbol.to_s     #appleapple
+
+# メソッドによっては文字列とシンボルを同等に扱うものがあり、respond_to?メソッドはオブジェクトに対して
+# 文字列またはシンボルで指定した名前のメソッドを呼び出せるかどうかを調べられる
+# respond_to?メソッドの引数には文字列とシンボルの両方を渡せる
+'apple'.respond_to?('include?')  #true
+'apple'.respond_to?('include?')  #true
+
+'apple'.respond_to?('foo_bar')  #false
+'apple'.respond_to?('foo_bar')  #false
+
+# 文字列とシンボルを同等に扱うかどうかはメソッドの仕様により、
+# 一般的には同等に扱わない(文字列とシンボルを区別する)ケースのほうが多い
+# 文字列に'pp'が含まれるか調べる
+puts 'apple'.include?('pp')   #true
+puts 'apple'.include?(:pp)   #TypeError
