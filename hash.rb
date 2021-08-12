@@ -102,3 +102,35 @@ puts person[:age]
 puts person[:friends]
 puts person[:phones][:mobile]
 
+# keysメソッド(ハッシュのキーを配列として返す)
+currencies = { japan: 'yen', us: 'dollar', india: 'rupee'}
+puts currencies.keys     #[japan, :us, :india]
+
+# valueメソッド( ハッシュの値を配列として返す)
+currencies = {japan: 'yen', us: 'dollar', india: 'rupee'}
+puts currencies.values   #["yen","dollar","rupee"]
+
+# hash_key?メソッドはハッシュの中に指定されたキーが存在するかどうか確認するメソッド
+currencies = {japan: 'yen', us: 'dollar', india: 'rupee'}
+puts currencies.has_key?(:japan)   #true
+puts currencies.has_key?(:italy)   #false
+
+# **でハッシュを展開させる
+h = {us: 'dollar', india: 'rupee'}
+# 変数hのキーと値を**で展開させる
+{japan:'yen', **h}
+# mergeメソッドでも上と同じ結果になる
+h = {us: 'dollar', india: 'rupee'}
+{japan: 'yen'}.merge(h)   #{:japan => "yen",:us => "dollar", :india => "rupee"}
+
+# to_aメソッド ハッシュを配列に変換できる(to_aメソッドを使うとキーと値が1つの配列に入りさらにそれが複数並んだ配列になって返る)
+currencies = {japan: 'yen',us: 'dollar', india: 'rupee'}
+puts currencies.to_a       #[[:japan, "yen"],[:us, "dollar"],[:india, "rupee"]]
+# 反対に配列に対してto_hメソッドを呼ぶと配列をハッシュに変換することができる。(ハッシュに変換する配列はキーと値の組み合わせごとに1つの配列に入り、それが要素の分だけ配列として並んでいる必要がある)
+array = [[:japan, "yen"],[:us,"dollar"],[:india,"rupee"]]
+puts array.to_h            #{:japan=>"yen", :us=>"dollar", :india=>"rupee"}
+
+
+
+
+
