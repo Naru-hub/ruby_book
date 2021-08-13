@@ -57,3 +57,78 @@ html = <<-HTML
 HTML
 replaced = html.gsub(/<option value="(\w+)"(?: selected)?>(.*)<\/option>/,'\1,\2')
 puts replaced
+
+
+text = <<-TEXT
+def hello(name)
+  puts "Hello, \#{name}!"
+end
+
+hello('Alice')
+     
+hello('Bob')
+	
+hello('Carol')
+TEXT
+puts text.gsub(/^[\t]+$/, '')   #無駄なスペースやタブ文字が削除されている
+
+
+text = <<-TEXT
+John:guitar, George:guitar, Paul:bass, Ringo:drum
+Freddie:vocal, Brian:guitar, John:bass, Roger:drum
+TEXT
+puts text.scan(/\w+(?=:bass)/)   #["Paul","John"]
+
+
+# if文で=~を使うとマッチしたかどうか判別できる
+if '123-4567' =~ /\d{3}-\d{4}/
+  puts 'マッチしました'
+else
+  puts 'マッチしませんでした'
+end
+#マッチしました
+
+# 左辺に正規表現をおいても結果は同じ
+puts /\d{3}-\d{4}/ =~ '123-4567'     #0
+puts /\d{3}-\d{4}/ =~ 'hello'        #nil
+
+# !~を使うとマッチしなかったときにtrueを、マッチしたときにfalseを返します
+# マッチしなければtrue
+puts 'hello' !~ /\d{3}-\d{4}/     #true
+# マッチすればfalse
+puts '123-4567' !~ /\d{3}-\d{4}/  #false
+
+
+# matchメソッドを使う
+text = '私の誕生日は1977年7月17日です。'
+m = /(\d+)年(\d+)月(\d+)日/.match(text)
+puts m[1]    #"1977"
+puts m[2]    #"7"
+puts m[3]    #"17"
+# 文字列が正規表現にマッチするとMatchDataオブジェクトが返り、マッチしない場合はnilが返ります。
+/(\d+)年(\d+)月(\d+)日/.match(text)   #<MatchData "1977年7月17日"1:"1977"2:"7"3:"17">
+/(\d+)年(\d+)月(\d+)日/.match('foo')  #nil
+
+
+# 条件分岐の中で真偽値の判定とローカル変数への代入を同時にする、よく使われるコード
+text = '私の誕生日は1977年7月17日です。'
+# 真偽値の判定とローカル変数への代入を同時にやってしまう
+if m = /(\d+)年(\d+)月(\d+)日/.match(text)
+  # マッチした場合の処理(ローカル変数のmを使う)
+else
+  #  マッチしなかった場合の処理
+end
+# MatchDataは[]を使って正規表現の処理結果を配列と同じような方法で取得できます。
+text = '私の誕生日は1977年7月17日です。'
+m = /(\d+)年(\d+)月(\d+)日/.match(text)
+# マッチした部分全体を取得する
+puts m[0]     #"1977年7月17日"
+# キャプチャの2番目から2個取得する
+puts m[2,2]   #["7",""17]
+# 最後のキャプチャを取得する
+puts m[-1]     #"17"
+# Rangeを使って取得する
+puts m[1..3]   #["1977","7","17"]
+# matchメソッドはStringクラスとRegexoクラスの両方に定義されているため文字列と正規表現オブジェクトを入れ替えても同じように動作する 
+text = '私の誕生日は1977年7月17日です。'
+puts m = text.match(/(\d+)年(\d+)月(\d+)日/)    #<MatchData "1977年7月17日"1:"1977"2:"7"3:"17">
