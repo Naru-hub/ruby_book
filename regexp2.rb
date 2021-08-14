@@ -50,3 +50,127 @@ text.gsub!(/,|-/,':')
 puts text    #123:456:789
 
 
+# /\d{3}-\d{4}/と書いた場合と同じ
+Regexp.new('\d{3}-\d{4}')
+# %rを使う方法です(%記法)以下の3つの正規表現はどれも全く同じです
+# スラッシュで囲むとスラッシュをエスケープする必要がある
+/http:\/\/example\.com/
+# %rを使うとスラッシュをエスケープしなくて良い
+%r!http://example\.com!
+# !ではなく{}を区切り文字にする
+%r{http://example\.com}
+
+# //や%rの中で#{}を使うと変数の中身を展開することができます
+pattern = '\d{3}-\d{4}'
+# 変数が展開されるので/\d{3}-\d{4}と書いたことと同じになる
+puts '123-4567' =~ /#{pattern}/    #0
+
+# 正規表現はcase文のwhen節で使うこともでき、case節で指定した文字列がwhen節で指定した正規表現にマッチするとwhen節の処理が実行されます
+text = '03-1234-5678'
+case text
+when /^\d{3}-\d{4}$/
+  puts '郵便番号です'
+when /^\d{4}\/\d{1,2}\/\d{1,2}$/
+  puts '日付です'
+when /^\d+-\d+-\d+$/
+  puts '電話番号です'
+end       #電話番号です
+
+# iオプション(アルファベットの大文字と小文字の違いを無視してマッチします)
+# iオプションをつけると大文字小文字を区別しない
+'HELLO' =~ /hello/i   #0
+# %rを使った場合も最後にオプションをつけられる
+'HELLO' =~ %r{hello}i   #0
+
+# Regexp.newを使う場合
+regexp = Regexp.new('hello', Regexp::IGNORECASE)
+'HELLO' =~ regexp  #0
+
+# mオプションを使うと任意の文字を表すドット(.)が改行文字にもマッチするようになります
+"Hello\nBye" =~ /Hello.Bye/  #nil
+# mオプションをつけると.が改行文字にもマッチする
+"Hello\nBye" =~ /Hello.Bye/m  #0
+
+# Regexp.newを使う場合はRegexp::MULTILINEという定数を渡します
+regexp = Regexp.new('Hello.Bye', Regexp::MULTILINE)
+"Hello\nBye" =~ regexp 
+
+# Xオプションを使うと空白文字(半角スペースや改行文字)が無視され#を使って正規表現中にコメントが書ける
+# xオプションをつけたので改行やスペースが無視されコメントも書ける
+regexp = /
+\d{3} #郵便番号の先頭3桁
+-     #区切り文字のハイフン
+\d{4} #郵便番号の末尾4桁
+/x
+'123-4567' =~ regexp   #0
+
+# xオプションをつけているときに空白を無視せず正規表現の一部として扱いたい場合はバックスラッシュでエスケープします
+regexp = /
+\d{3}
+\    #半角スペースで区切る
+\d{4}
+/x
+'123 4567' =~ regexp   #0
+
+# Regexp.newを使う場合はRegexp::EXTENDEDという定数を渡します
+# バックスラッシュを特別扱いしないように'TEXT'を使う
+pattern = <<'TEXT'
+\d{3}   #郵便番号の先頭3桁
+-       #区切り文字のハイフン
+\d{4}   #郵便番号の末尾4桁
+TEXT
+regexp = Regexp.new(pattern,Regexp::EXTENDED)
+'123-4567' =~ regexp    #0
+
+# これらオプションは同時に使うこともできる
+# iオプションとmオプションを同時に使うこと
+"HELLO\nBYE" =~ /Hello.Bye/im   #0
+
+# Regexp.newを使う場合は|で連結(論理和を作成)します。
+regexp = Regexp.new('Hello.Bye', Regexp::IGNORECASE | Regexp::MULTILINE)
+puts "HELLO\nBYE" =~ regexp
+
+# 組み込み変数でマッチの結果を取得する
+# Rubyには$で始まる特殊な変数(組み込む変数)が存在します。=~演算子やmatchメソッドを使うといくつかの組み込み変数にマッチした結果が代入されます。組み込み変数でもMatchDataとほとんど同等の結果を得ることができます
+text = '私の誕生日は1977年7月17日です。'
+
+# =~やmatchメソッドを使うとマッチした結果が組み込み変数に代入される
+text =~ /(\d+)年(\d+)月(\d+)日/
+# MatchDataオブジェクトを取得する
+puts $~    #<MatchData "1977年7月17日" 1:"1977" 2:"7" 3:"17">
+# マッチした部分全体を取得する
+puts $&    #"1977年7月17日"
+# 1番目~3番目のキャプチャを取得する
+puts $1    #"1977"
+puts $2    #"7"
+puts $3    #"17"
+# 最後のキャプチャ文字列を取得する
+puts $+    #"17"
+
+# Regexp.last_matchでマッチの結果を取得する
+# Regexp.last_matchメソッドを使うと先ほど説明した組み込み変数のように=~演算子などで最後にマッチした結果を取得できます
+text = '私の誕生日は1977年7月17日です。'
+# =~演算子などを使うとマッチした結果をRegexp.last_matchで取得できる
+text =~ /(\d+)年(\d+)月(\d+)日/
+
+# MatchDataオブジェクトを取得する
+puts Regexp.last_match   #<MatchData "1977年7月17日" 1:"1977"2:"7"3:"17">
+# マッチした部分全体を取得する
+puts Regexp.last_match(0)     #"1977年7月17日"
+# 1番目~3番目のキャプチャを取得する
+puts Regexp.last_match(1)     #"1977"
+puts Regexp.last_match(2)     #"7"
+puts Regexp.last_match(3)     #"17"
+# 最後のキャプチャ文字列を取得する
+puts Regexp.last_match(-1)    #"17"
+
+# 組み込み変数を書き換えないmatch?メソッド
+# このメソッドは文字列が正規表現にマッチすればtrue、マッチしなければfalseを返します。ただしマッチした場合でも組み込み変数やRegexp.last_matchの内容を書き換えません。そのため=~演算子やmatchメソッドよりも高速に動作します。
+# マッチすればtrueを返す
+puts /\d{3}-\d{4}/.match?('123-4567')     #true
+# マッチしても組み込み変数やRegexp.last_matchを書き換えない
+#(すでにどこかで=~やmatchを使っていた場合はそのときに設定された値になります)
+puts $~
+puts Regexp.last_match
+# 文字列と正規表現を入れ替えてもOK
+puts '123-4567'.match?(/\d{3}-\d{4}/)  #true
