@@ -175,3 +175,34 @@ dvd = DVD.new('An awesome film')
 puts dvd.upcase_name  #AN AWESOME FILM
 puts Product.name     #Product
 puts DVD.name         #DVD
+
+
+# グローバル変数
+# グローバル変数の宣言と値の代入
+$program_name = 'Awesome Program'
+
+# グローバル変数に依存するクラス
+class Program
+  def initialize(name)
+    $program_name = name
+  end
+
+  def self.name
+    $program_name
+  end
+
+  def name
+    $program_name
+  end
+end
+
+# $program_nameにはすでに名前が代入されている
+puts Program.name   #Awesome Program
+
+program = Program.new('Super program')
+puts program.name   #Super program
+
+# Program.newのタイミングで$program_nameが"Super program"に変更される
+puts Program.name   #Super program
+puts $program_name  #Super program
+
