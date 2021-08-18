@@ -73,9 +73,76 @@ b = Product.new('B-0001','An awesome film')
 c = Product.new('A-0001','A great movie')
 
 # 商品コードが一致すればtrueになる
-puts a == b  #false
-puts a == c  #true
+a == b  #false
+a == c  #true
 
 # Product以外の比較はfalse
-puts a == 1    #false
-puts a == 'a'  #false
+a == 1    #false
+a == 'a'  #false
+
+
+# equal? メソッド(object_idが等しい場合にtrueを返します)
+ a = 'abc'
+ b = 'abc'
+ a.equal?(b)  #false
+
+ c = a
+ a.equal?(c)  #true
+
+#  == はオブジェクトの内容が等しいか判断する
+1 == 1.0      #true
+
+# eql? メソッドハッシュのキーとして2つのオブジェクトが等しいかどうかを判断する
+# ハッシュ上では1と1.0は別々のキーとして扱われる
+h = {1 => 'Inreger', 1.0 => 'Float'}
+h[1]     #Inreger
+h[1.0]   #Float
+# 異なるキーとして扱われるのはeql？メソッドで比較した時にfalseになるため
+1.eql?(1.0)  #false
+
+# eql?メソッドを再定義した場合は「a.eql?(b)が真なら、a.hash == b.hashも真』となるようにhashメソッドも再定義しなければなりません
+a = 'japan'
+b = 'japan'
+# eql?が真ならhash値も同じ
+a.eql?(b)  #true
+a.hash     #1975071775853178628
+b.hash     #1975071775853178628
+
+c = 1
+d = 1.0
+# eql?が偽ならhash値も異なる
+c.eql?(d)  #false
+c.hash     #1888656623054670106
+d.hash     #-1928430720389354965
+
+
+value = [1,2,3]
+# 内部的には String ＝＝＝ value， Array === value、 Hash ===valueの結果が評価されている
+case value
+when String
+  puts '文字列です'
+when Array
+  puts '配列です'
+when Hash
+  puts 'ハッシュです'
+end
+#配列です
+
+
+# Stirngクラスを継承した独自クラスを定義する
+class MyString < String
+  # Stringクラスを拡張するためのコードを書く
+end
+s = MyString.new('Hello')
+puts s           #Hello
+puts s.class     #MyString
+
+# Arrayクラスを継承した独自クラスを定義する
+class MyArray < Array
+  # Arrayクラスを拡張するためのコードを書く
+end
+a = MyArray.new()
+a << 1
+a << 2
+puts a   #[1,2]
+puts a.class   #[MyArray]
