@@ -146,3 +146,67 @@ a << 1
 a << 2
 puts a   #[1,2]
 puts a.class   #[MyArray]
+
+
+class String
+  # 文字列をランダムにシャッフルする
+  def shuffle
+    chars.shuffle.join
+  end
+end
+
+s = 'Hello, Iam Alice'
+puts s.shuffle   #"m,icaHol lele IA"
+puts s.shuffle   #iHee,llo cm AlaI
+
+
+# モンキーパッチ(既存の実装を上書きして自分が期待する挙動に変更する)
+# 以下のUserクラスは外部ライブラリーで定義されている想定
+class User
+  def initialize(name)
+    @name = name
+  end
+
+  def hello
+    "Hello, #{@name}!"
+  end
+end
+# モンキーパッチをあてる前の挙動を確認する
+user = User.new('Alice')
+puts user.hello   #"Hello, Alice!"
+
+# helloメソッドにモンキーパッチをあてて独自の挙動をもたせる
+class User
+  def hello
+    "#{@name}さん、こんにちは！"
+  end
+end
+# メソッドの定義を上書きしたのでhelloメソッドの挙動が変わっている
+puts user.hello   #"Aliceさん、こんにちは！"
+
+# 応用 既存のメソッドをエイリアスメソッドとして残し上書きしたメソッドの中で既存のメソッドを再利用することもできる
+# 以下のUserクラスは外部ライブラリーで定義されている想定
+class User
+  def initialize(name)
+    @name = name
+  end
+
+  def hello
+    "Hello,#{@name}!"
+  end
+end
+
+# モンキーパッチをあてるためにUserクラスを再オープンする
+class User
+  # 既存のhelloメソッドはhello_originalとして呼び出せるようにしておく
+  alias hello_original hello
+  # helloメソッドにモンキーパッチをあてる
+  # (元々実装されていたhelloメソッドも再利用する)
+  def hello
+    "#{hello_original}じゃなくて、#{@name}さんこんにちは！"
+  end
+end
+
+# モンキーパッチをあてたhelloメソッドの挙動を確認する
+user = User.new('Alice')
+puts user.hello #Hello,Alice!じゃなくて、Aliceさんこんにちは！
