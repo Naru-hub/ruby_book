@@ -159,3 +159,44 @@ puts Hash.include?(Enumerable)     #true
 puts Range.include?(Enumerable)    #true
 puts [1,2,3].map {|n| n * 10}      #[10,20,30]
 puts (1..3).map {|n| n * 10}       #[10,20,30]
+# 配列、ハッシュ、範囲で countメソッドを使う
+puts [1,2,3].count                 #3
+puts [a: 1,b: 2,c: 3].count
+puts (1..3).count                  #3
+
+
+# Comparableモジュール
+class Tempo
+  include Comparable
+  attr_reader :bpm
+  # bpmはBeats Per Minuteの略で音楽の速さを表す単位
+  def initialize(bpm)
+    @bpm = bpm
+  end
+  
+  # <=>はComparableモジュールで使われる演算子(メソッド)
+  def <=>(other)
+    if other.is_a?(Tempo)
+      # bpm同士を＜＝＞で比較した結果を返す
+      bpm <=> other.bpm
+    else
+      # 比較できない場合はnilを返す
+      nil
+    end
+  end
+
+  # inspectメソッドをオーバーライド
+  def inspect
+    "#{bpm}bpm"
+  end
+end
+# このクラスを実際に使って大小関係を比較してみます
+t_120 = Tempo.new(120)
+t_180 = Tempo.new(180)
+t_120 > t_180    #false
+t_120 <= t_180   #true
+t_120 == t_180   #false
+
+tempos = [Tempo.new(180),Tempo.new(60),Tempo.new(120)]
+tempos.sort
+
