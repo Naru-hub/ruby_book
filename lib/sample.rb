@@ -105,8 +105,125 @@ begin
   'abc'.foo
 rescue ZeroDivisionError,NoMethodError => e
   puts "0で除算したか、存在しないメソッドが呼び出されました"
-  puts "エラー: #{e.class}#{e.message}"
+  # puts "エラー: #{e.class}#{e.message}"
 end
 #0で除算したか、存在しないメソッドが呼び出されました
 # エラー: NoMethodErrorundefined method `foo' for "abc":String
 
+
+begin
+  'abc'.foo
+rescue NoMethodError
+  # NoMethodErrorはここで補足される
+  puts 'NoMethodErrorです'
+rescue NameError
+  puts 'NameErrorです'
+end
+#NoMethodErrorです
+
+begin
+  # NameErrorを発生させる
+  Foo.new
+rescue NoMethodError
+  puts 'NoMethodErrorです'
+rescue NameError
+  puts 'NameErrorです'
+end
+#NameErrorです
+
+begin
+  # ZeroDivisionErrorを発生させる
+  1/0
+rescue NoMethodError
+  puts 'NoMethodErrorです'
+rescue NameError
+  puts 'NameErrorです'
+rescue StandardError
+  puts 'その他のエラーです'
+end
+#その他のエラーです
+
+
+begin
+  # ZeroDivisionErrorを発生させる
+  1/0
+rescue NoMethodError
+  puts 'NoMethodErrorです'
+rescue NameError
+  puts 'NameErrorです'
+rescue  #例外クラスを指定しない
+  puts 'その他のエラーです'
+end
+#その他のエラーです
+
+retry_count = 0
+begin
+  puts '処理を開始します。'
+  # わざと処理を発生させる
+  1/0
+rescue
+  retry_count += 1
+  if retry_count <= 3
+    puts "retryします。(#{retry_count}回目)"
+    retry
+  else
+    puts 'retryに失敗しました。'
+  end
+end
+# 処理を開始します。
+# retryします。(1回目)
+# 処理を開始します。
+# retryします。(2回目)
+# 処理を開始します。
+# retryします。(3回目)
+# 処理を開始します。
+# retryに失敗しました。
+
+
+# def currency_of(country)
+#   case country
+#   when :japan
+#     'yen'
+#   when :us
+#     'dollar'
+#   when :india
+#     'rupee'
+#   else
+#     # 意図的に例外を発生させる
+#     raise "無効な国名です。#{country}"
+#   end
+# end
+
+# puts currency_of(:japan)   #"yen"
+# puts currency_of(:italy)   #無効な国名です。italy (RuntimeError)
+
+# def currency_of(country)
+#   case country
+#   when :japan
+#     'yen'
+#   when :us
+#     'dollar'
+#   when :india
+#     'rupee'
+#   else
+#     # RuntimeErrorではなく、ArgumentErrorを発生させる
+#     raise ArgumentError, "無効な国名です。#{country}"
+#   end
+# end
+# currency_of(:italy)   #無効な国名です。italy (ArgumentError)
+
+
+def currency_of(country)
+  case country
+  when :japan
+    'yen'
+  when :us
+    'dollar'
+  when :india
+    'rupee'
+  else
+    # raiseメソッドに例外クラスのインスタンスを渡す(newの引数はエラーメッセージになる)
+    raise ArgumentError.new("無効な国名です。#{country}")
+  end
+end
+currency_of(:italy)    #無効な国名です。italy (ArgumentError)
