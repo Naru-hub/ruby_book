@@ -213,17 +213,71 @@ end
 # currency_of(:italy)   #無効な国名です。italy (ArgumentError)
 
 
-def currency_of(country)
-  case country
-  when :japan
-    'yen'
-  when :us
-    'dollar'
-  when :india
-    'rupee'
-  else
-    # raiseメソッドに例外クラスのインスタンスを渡す(newの引数はエラーメッセージになる)
-    raise ArgumentError.new("無効な国名です。#{country}")
-  end
-end
-currency_of(:italy)    #無効な国名です。italy (ArgumentError)
+# def currency_of(country)
+#   case country
+#   when :japan
+#     'yen'
+#   when :us
+#     'dollar'
+#   when :india
+#     'rupee'
+#   else
+#     # raiseメソッドに例外クラスのインスタンスを渡す(newの引数はエラーメッセージになる)
+#     raise ArgumentError.new("無効な国名です。#{country}")
+#   end
+# end
+# currency_of(:italy)    #無効な国名です。italy (ArgumentError)
+
+
+# def convert_heisei_to_date(heisei_text)
+#   m = heisei_text.match(/平成(?<jp_year>\d+)年(?<month>\d+)月(?<day>\d+)日/)
+#   year = m[:jp_year].to_i + 1988
+#   month = m[:month].to_i
+#   day = m[:day].to_i
+#   # 例外処理の範囲を挟め、捕捉例外クラスを限定する
+#   begin
+#     Date.new(year,month,day)
+#   rescue ArgumentError
+#     # 無効な日付があればnilを返すnil
+#     nil
+#   end
+# end
+
+# convert_heisei_to_date('平成28年12月31日')
+# convert_heisei_to_date('平成28年99月99日')
+
+
+# require 'date'
+# def convert_heisei_to_date(heisei_text)
+#   m = heisei_text.match(/平成(?<jp_year>\d+)年(?<month>\d+)月(?<day>\d+)日/)
+#   year = m[:jp_year].to_i + 1988
+#   month = m[:month].to_i
+#   day = m[:day].to_i
+#   # 正しい日付のみDateオブジェクトを作成する
+#   if Date.valid_date?(year,month,day)
+#     Date.new(year,month,day)
+#   end
+# end
+
+# convert_heisei_to_date('平成28年12年31日')
+# convert_heisei_to_date('平成28年99月99日')
+
+
+# elseに入ったら例外を発生させるパターン
+# def currency_of(country)
+#   case country
+#   when :japan
+#     'yen'
+#   when :us
+#     'dollar'
+#   when :india
+#     'rupee'
+#   else
+#     raise ArgumentError,"無効な国名です。#{country}"
+#   end
+# end
+# # 例外が発生する
+# currency_of(:italy)  #無効な国名です。italy (ArgumentError)
+
+input = gets.chomp
+input
