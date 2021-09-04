@@ -80,4 +80,25 @@ puts 'Hi!'*10          #Hi!Hi!Hi!Hi!Hi!Hi!Hi!Hi!Hi!Hi!
 
 puts "\u3042\u3044\u3046"       #あいう
 
+a = 'ruby'
+puts a.upcase  #RUBY
+puts a         #ruby
+puts a.upcase! #RUBY
+puts a         #RUBY
 
+def reverse_upcase!(s)
+  s.reverse!.upcase!
+end
+s = 'ruby'
+puts reverse_upcase!(s)   #YBUR
+puts s                    #YBUR
+
+a = 'hello'
+b = 'hello'
+c = b
+def m!(d)
+  d.upcase!
+end
+m!(c)
+puts b    #HELLO
+puts c    #HELLO
